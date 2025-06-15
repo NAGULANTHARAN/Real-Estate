@@ -210,7 +210,7 @@ export const updateAppointmentStatus = async (req, res) => {
       html: getEmailTemplate(appointment, status)
     };
 
-    await transporter.sendMail(mailOptions);
+    // await transporter.sendMail(mailOptions);
 
     res.json({
       success: true,
@@ -226,14 +226,9 @@ export const updateAppointmentStatus = async (req, res) => {
   }
 };
 
-// Add scheduling functionality
 export const scheduleViewing = async (req, res) => {
   try {
     const { propertyId, date, time, notes } = req.body;
-    
-    // req.user is set by the protect middleware
-    
-
     const userId = req.user._id;
 
     // Check if property exists
@@ -272,15 +267,7 @@ export const scheduleViewing = async (req, res) => {
     await appointment.save();
     await appointment.populate(['propertyId', 'userId']);
 
-    // Send confirmation email
-    const mailOptions = {
-      from: process.env.EMAIL,
-      to: req.user.email,
-      subject: "Viewing Scheduled - BuildEstate",
-      html: getSchedulingEmailTemplate(appointment, date, time, notes)
-    };
-
-    await transporter.sendMail(mailOptions);
+    // Removed email sending logic here
 
     res.status(201).json({
       success: true,
@@ -295,6 +282,7 @@ export const scheduleViewing = async (req, res) => {
     });
   }
 };
+
 
 // Add this with other exports
 export const cancelAppointment = async (req, res) => {
